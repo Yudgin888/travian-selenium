@@ -1,0 +1,93 @@
+version: '3'
+services:
+  php:
+    container_name: travian-php
+    build:
+      context: ./config/php
+    volumes:
+      - ./public_html:/var/www
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+    networks:
+      - travian-network
+    tty: true
+
+  nginx:
+    container_name: travian-nginx
+    build:
+      context: ./config/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./public_html:/var/www
+    networks:
+      - travian-network
+    depends_on:
+      - php
+
+  redis:
+    container_name: travian-redis
+    image: eqalpha/keydb:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - travian-network
+
+  chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: travian-selenium-standalone
+    ports:
+      - "4444:4444"
+      - "5900:5900"
+    volumes:
+      - /dev/shm:/dev/shm
+    environment:
+      - JAVA_OPTS=-Dwebdriver.chrome.whitelistedIps=
+    #network_mode: "host"
+    networks:
+      - travian-network
+
+#  jaegar:
+#    image: jaegertracing/all-in-one:1.17
+#    container_name: travian-jaegar
+#    ports:
+#      - "16686:16686"
+#      - "14250:14250"
+#    networks:
+#      - travian-network
+
+#  selenium-hub:
+#    image: selenium/hub:4.8.0-20230202
+#    container_name: travian-selenium-hub
+#    ports:
+#      - "4442:4442"
+#      - "4443:4443"
+#      - "4444:4444"
+#    depends_on:
+#      - jaegar
+#    environment:
+#      - SE_ENABLE_TRACING=true
+#      - JAVA_OPTS=-Dotel.traces.exporter=jaeger -Dotel.exporter.jaeger.endpoint=http://jaegar:14250 -Dotel.resource.attributes=service.name=selenium-hub
+#    networks:
+#      - travian-network
+#
+#  chrome:
+#    image: selenium/node-chrome:4.8.0-20230202
+#    container_name: travian-chrome
+#    shm_size: 2gb
+#    depends_on:
+#      - selenium-hub
+#    environment:
+#      - SE_EVENT_BUS_HOST=selenium-hub
+#      - SE_EVENT_BUS_PUBLISH_PORT=4442
+#      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+#      - SE_ENABLE_TRACING=true
+#      - JAVA_OPTS=-Dotel.traces.exporter=jaeger -Dotel.exporter.jaeger.endpoint=http://jaegar:14250 -Dotel.resource.attributes=service.name=selenium-node-chrome
+#    volumes:
+#      - /dev/shm:/dev/shm
+#    networks:
+#      - travian-network
+
+networks:
+  travian-network:
+    driver: bridge

@@ -1,0 +1,3 @@
+GET /run
+Host: {{host}}
+Protocol: http

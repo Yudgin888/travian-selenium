@@ -1,0 +1,24 @@
+selenium/standalone-chrome - Selenium standalone with chrome installed.
+selenium/node-chrome - Grid node with Chrome installed, needs to be connected to a Grid Hub.
+selenium/standalone-chrome-debug - Selenium standalone with Chrome installed, and runs VNC Server.
+selenium/node-chrome-debug - Grid node with Chrome installed and VNC Server, needs to be connected to a Grid Hub.
+
+#########################
+
+vns for selenium/standalone-chrome:
+localhost:5900
+pwd: secret
+
+#########################
+
+Implicit wait time for findElements https://stackoverflow.com/a/28067495/1907888
+
+https://github.com/php-webdriver/php-webdriver/wiki/
+
+$driver->switchTo()->frame($my_frame);
+// do your stuff here and switch back afterwards
+$driver->switchTo()->defaultContent();
+
+#########################
+
+Travian - global js obj

@@ -1,0 +1,3 @@
+GET /external
+Host: {{host}}
+Protocol: http

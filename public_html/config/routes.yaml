@@ -1,0 +1,9 @@
+run:
+  methods: GET
+  path: /run
+  controller: App\Controller\Run
+
+external:
+  methods: GET
+  path: /external
+  controller: App\Controller\External
